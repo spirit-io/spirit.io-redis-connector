@@ -56,14 +56,14 @@ describe('Spirit.io ORM Framework Tests:', () => {
             // this test does not validate populate as it is not the purpose !
 
             // instanciate class with ModelBase's save method
-            let mRel1: MyModelRel = new MyModelRel({ p1: "prop1" });
+            let mRel1: MyModelRel = new MyModelRel({ _id: "id1", p1: "prop1" });
             mRel1.save(_);
             expect(mRel1.p1).to.equal("prop1");
 
-            let mRel2: MyModelRel = new MyModelRel({ p1: "prop2" });
+            let mRel2: MyModelRel = new MyModelRel({ _id: "id2", p1: "prop2" });
             mRel2.save(_);
             expect(mRel2.p1).to.equal("prop2");
-            let mRel3: MyModelRel = new MyModelRel({ p1: "prop3" });
+            let mRel3: MyModelRel = new MyModelRel({ _id: "id3", p1: "prop3" });
             mRel3 = mRel3.save(_);
             expect(mRel3.p1).to.equal("prop3");
 
@@ -127,7 +127,7 @@ describe('Spirit.io ORM Framework Tests:', () => {
         Fixtures.execAsync(done, function (_) {
             let db = AdminHelper.model(MyModelRel);
             let rels = db.fetchInstances(_).sort((a, b) => {
-                return a._id > b._id;
+                return a._id > b._id ? 1 : 0;
             });
             expect(rels.length).to.equal(3);
 

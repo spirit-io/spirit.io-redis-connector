@@ -195,12 +195,10 @@ describe('Spirit.io REST Express routes Tests:', () => {
             let resp = Fixtures.get(_, '/api/v1/myModel?includes=inv');
             let body = JSON.parse(resp.body);
             expect(resp.status).to.equal(200);
-            console.log("Body:", body)
 
             // simple object include
             resp = Fixtures.get(_, '/api/v1/myModel?includes={"path": "inv"}');
             let body2 = JSON.parse(resp.body);
-            console.log("Body2:", body2)
             expect(resp.status).to.equal(200);
             expect(body).to.be.a('array');
             expect(objectHelper.areEqual(body, body2)).to.be.true;
@@ -217,7 +215,6 @@ describe('Spirit.io REST Express routes Tests:', () => {
             // string include with select
             resp = Fixtures.get(_, '/api/v1/myModel?includes=inv.p1');
             body = JSON.parse(resp.body);
-            console.log("Body3:", body)
             expect(resp.status).to.equal(200);
             expect(body).to.be.a('array');
             expect(body.length).to.equal(1);
