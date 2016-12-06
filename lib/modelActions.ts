@@ -17,35 +17,7 @@ export class ModelActions implements IModelActions {
     private _populate(_: _, item: any, parameters: IFetchParameters | IQueryParameters) {
         parameters = parameters || {};
         Object.keys(this.modelFactory.$references).forEach_(_, (_, key) => {
-            let incl = parameters.includes && parameters.includes.filter((i) => { return i.path === key; })[0];
-            if (incl && item && item[key] != null) {
-                let type = this.modelFactory.getReferenceType(key);
-                let mf = this.modelFactory.getModelFactoryByPath(key);
-                let relValue;
-                if (Array.isArray(item[key])) {
-                    relValue = [];
-                    item[key].forEach_(_, (_, id) => {
-                        let ref = mf.actions.read(_, id);
-                        if (incl.select) {
-                            let data = { _id: ref._id };
-                            data[incl.select] = ref[incl.select];
-                            relValue.push(data);
-                        } else {
-                            relValue.push(ref);
-                        }
-                    });
-                } else {
-                    let ref = mf.actions.read(_, item[key]);
-                    if (incl.select) {
-                        let data = { _id: ref._id };
-                        data[incl.select] = ref[incl.select];
-                        relValue = data;
-                    } else {
-                        relValue = ref;
-                    }
-                }
-                item[key] = relValue;
-            }
+            this.modelFactory.populateField(_, parameters, item, key);
         });
     }
 
