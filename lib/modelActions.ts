@@ -21,27 +21,6 @@ export class ModelActions implements IModelActions {
         });
     }
 
-    private _simplifyReferences(item: any) {
-        let transformed = objectHelper.clone(item, true);
-        Object.keys(this.modelFactory.$references).forEach((key) => {
-            if (transformed && transformed[key] != null) {
-                let relValue;
-                if (Array.isArray(transformed[key])) {
-                    relValue = [];
-                    transformed[key].forEach((it) => {
-                        if (typeof it === 'object' && it._id) relValue.push(it._id);
-                        else relValue.push(it);
-                    });
-                } else {
-                    if (typeof transformed[key] === 'object' && transformed[key]._id) relValue = transformed[key]._id;
-                    else relValue = transformed[key];
-                }
-                transformed[key] = relValue;
-            }
-        });
-        return transformed;
-    }
-
     query(_: _, filter: Object = {}, options?: any) {
         options = options || {};
         let key = `${this.modelFactory.collectionName}:*`;
@@ -91,7 +70,7 @@ export class ModelActions implements IModelActions {
         options = options || {};
         let key = `${this.modelFactory.collectionName}:${_id}`;
         item._updatedAt = new Date();
-        let itemToStore = this._simplifyReferences(item);
+        let itemToStore = this.modelFactory.simplifyReferences(item);
         let res = this.modelFactory.client.mset(key, JSON.stringify(itemToStore), _);
         if (options.includes) this._populate(_, itemToStore, options);
         return item;
