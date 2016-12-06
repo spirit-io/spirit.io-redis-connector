@@ -1,0 +1,3 @@
+[submodule "spirit.io"]
+	path = spirit.io
+	url = https://github.com/spirit-io/spirit.io.git
