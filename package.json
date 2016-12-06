@@ -23,7 +23,6 @@
     "redis": "^2.6.3",
     "spirit.io": "^1.0.0",
     "streamline": "^2.0.10",
-    "streamline-node": "^1.0.4",
     "streamline-runtime": "^1.0.31",
     "uuid": "^3.0.0"
   },
