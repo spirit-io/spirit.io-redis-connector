@@ -8,8 +8,8 @@ export class RedisConnector implements IConnector {
     private _datasource: string = 'redis';
     private _config: any;
 
-    constructor(ds?: string) {
-        if (ds) this._datasource = ds;
+    constructor(config: any) {
+        this.config = config;
     }
 
     get datasource(): string {
