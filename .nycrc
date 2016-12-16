@@ -1,10 +1,13 @@
 {
     "include": [
-      "lib/*.ts",
-      "lib/**/*.ts"
+      "lib/*.js",
+      "lib/**/*.js"
+    ],
+    "exclude": [
+      "lib/**/index.js"
     ],
     "extension": [
-      ".ts"
+      ".js"
     ],
     "reporter": [
       "lcov",

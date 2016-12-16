@@ -45,13 +45,13 @@ export class MyModel extends ModelBase {
     @reverse('relinvs')
     invs: MyModelRel[];
 
-    aMethod(_, params: any): string {
+    aMethod(params: any): string {
         this.pString = params.pString;
-        this.save(_);
+        this.save();
         return `aMethod has been called with parameters ${JSON.stringify(params)}`;
     }
 
-    static aService(_, params: any): any {
+    static aService(params: any): any {
         return { c: (params.a + params.b).toFixed(2) };
     }
 

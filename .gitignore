@@ -1,4 +1,6 @@
 node_modules
 coverage
+lib/*
+test/*
 **/*.js.map
 .nyc_output

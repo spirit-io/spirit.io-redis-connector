@@ -3,13 +3,29 @@ import { ConnectionHelper } from './connectionHelper';
 import { ModelFactory } from './modelFactory';
 
 const redis = require("redis");
+const bluebird = require("bluebird");
+bluebird.promisifyAll(redis.RedisClient.prototype);
+bluebird.promisifyAll(redis.Multi.prototype);
+
+
+// override redis module declaration to get intellisense on Async methods
+// Check with future version of typescript because of error: TS2451: Cannot redeclare block-scoped variable '_'
+//
+// declare module "redis" {
+//     export interface RedisClient extends NodeJS.EventEmitter {
+//         setAsync(key: string, value: string): Promise<void>;
+//         getAsync(key: string): Promise<string>;
+//         mgetAsync(keys: string[]): Promise<string>;
+//         keysAsync(key: string): Promise<string>;
+//     }
+// }
 
 export class RedisConnector implements IConnector {
     private _datasource: string = 'redis';
     private _config: any;
 
     constructor(config: any) {
-        this.config = config;
+        this._config = config;
     }
 
     get datasource(): string {
