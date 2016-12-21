@@ -3,6 +3,8 @@ import { RedisConnector } from '../../lib/connector';
 import { ConnectorHelper } from 'spirit.io/lib/core';
 import { devices } from 'f-streams';
 import { context } from 'f-promise';
+import { Fixtures as GlobalFixtures } from 'spirit.io/test/fixtures';
+
 const path = require('path');
 
 let trace;// = console.log;
@@ -29,28 +31,7 @@ const config = {
 
 };
 
-
-function request(method: string, url: string, data?: any, headers?: any) {
-    headers = headers || {
-        'content-type': 'application/json'
-    };
-    trace && trace("HTTP " + method + " " + baseUrl + url);
-    let cli = devices.http.client({
-        url: baseUrl + url,
-        method: method,
-        headers: headers
-    })
-
-    let resp = cli.proxyConnect().end(data != null ? JSON.stringify(data) : undefined).response();
-
-    return {
-        status: resp.statusCode,
-        headers: resp.headers,
-        body: resp.readAll()
-    };
-}
-
-export class Fixtures {
+export class Fixtures extends GlobalFixtures {
 
     static setup = (done) => {
         let firstSetup = true;
@@ -77,33 +58,6 @@ export class Fixtures {
         //
         if (!firstSetup) done();
         return context().__server;
-    }
-
-    static get = (url: string, headers?: any) => {
-        return request('GET', url, null, headers);
-    }
-
-    static post = (url: string, data: any, headers?: any) => {
-        return request('POST', url, data, headers);
-    }
-
-    static put = (url: string, data: any, headers?: any) => {
-        return request('PUT', url, data, headers);
-    }
-
-    static delete = (url: string, headers?: any) => {
-        return request('DELETE', url, null, headers);
-    }
-
-    static patch = (url: string, headers?: any) => {
-        return request('PATCH', url, headers);
-    }
-
-    static execAsync = (done, fn): void => {
-        fn(function (err, res) {
-            if (err) done(err);
-            else done();
-        });
     }
 }
 
