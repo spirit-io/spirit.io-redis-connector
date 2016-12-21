@@ -1,7 +1,7 @@
-import { collection, unique, required, index, reverse, embedded, hook } from 'spirit.io/lib/decorators';
+import { model, unique, required, index, reverse, embedded, hook } from 'spirit.io/lib/decorators';
 import { ModelBase } from 'spirit.io/lib/base';
 
-@collection({ datasource: 'redis' })
+@model({ datasource: 'redis' })
 export class MyModelRel extends ModelBase {
     constructor(data) {
         super(data);
@@ -11,7 +11,7 @@ export class MyModelRel extends ModelBase {
     relinvs: MyModel[]
 }
 
-@collection({ datasource: 'redis' })
+@model({ datasource: 'redis' })
 export class MyModel extends ModelBase {
     constructor() {
         super();

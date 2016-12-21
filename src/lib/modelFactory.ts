@@ -9,8 +9,11 @@ import { Router } from 'express';
 
 let trace;// = console.log;
 
+export interface IRedisModelFactory extends IModelFactory {
+    client: RedisClient;
+}
 
-export class ModelFactory extends ModelFactoryBase {
+export class ModelFactory extends ModelFactoryBase implements IRedisModelFactory {
 
 
     public client: RedisClient;

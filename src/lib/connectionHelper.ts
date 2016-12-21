@@ -11,6 +11,9 @@ export class ConnectionHelper {
         client.once("connect", () => {
             console.log("Connected on redis: ", parameters.uri);
         });
+        client.once("error", (e) => {
+            console.log("RedisError: ", e.stack);
+        });
         context()['redisConnections'].set(datasourceKey, client);
         return client;
     }

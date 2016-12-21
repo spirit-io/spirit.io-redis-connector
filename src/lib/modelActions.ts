@@ -1,6 +1,6 @@
-import { IModelActions, IFetchParameters, IQueryParameters } from 'spirit.io/lib/interfaces';
+import { IModelActions, IParameters } from 'spirit.io/lib/interfaces';
 import { ModelRegistry } from 'spirit.io/lib/core';
-import { ModelFactory } from './modelFactory';
+import { IRedisModelFactory } from './modelFactory';
 import { helper as objectHelper } from 'spirit.io/lib/utils'
 import { wait } from 'f-promise';
 
@@ -12,16 +12,16 @@ function ensureId(item: any) {
 
 export class ModelActions implements IModelActions {
 
-    constructor(private modelFactory: ModelFactory) { }
+    constructor(private modelFactory: IRedisModelFactory) { }
 
-    private _populate(item: any, parameters: IFetchParameters | IQueryParameters) {
+    private _populate(item: any, parameters: IParameters) {
         parameters = parameters || {};
         Object.keys(this.modelFactory.$references).forEach((key) => {
             this.modelFactory.populateField(parameters, item, key);
         });
     }
 
-    query(filter: Object = {}, options?: any) {
+    query(filter: Object = {}, options?: IParameters): any[] {
         options = options || {};
         let key = `${this.modelFactory.collectionName}:*`;
 
@@ -29,7 +29,7 @@ export class ModelActions implements IModelActions {
         let keys: any = wait((<any>this.modelFactory.client).keysAsync(key));
         if (!keys.length) return [];
         let arr: any = wait((<any>this.modelFactory.client).mgetAsync(keys));
-        let objects: Object[] = arr.map((obj) => {
+        let objects: any[] = arr.map((obj) => {
             let res = JSON.parse(obj);
             if (options.includes) this._populate(res, options);
             return res;
@@ -37,7 +37,7 @@ export class ModelActions implements IModelActions {
         return objects;
     }
 
-    read(filter: any, options?: any) {
+    read(filter: any, options?: IParameters): any {
         options = options || {};
         let key = `${this.modelFactory.collectionName}:${filter}`;
         if (!this.modelFactory.client.exists(key)) return null;
@@ -63,13 +63,13 @@ export class ModelActions implements IModelActions {
         }
     }
 
-    create(item: any, options?: any) {
+    create(item: any, options?: IParameters): any {
         ensureId(item);
         item._createdAt = new Date();
         return this.update(item._id, item, options);
     }
 
-    update(_id: any, item: any, options?: any) {
+    update(_id: any, item: any, options?: IParameters): any {
         options = options || {};
         let key = `${this.modelFactory.collectionName}:${_id}`;
         item._updatedAt = new Date();
