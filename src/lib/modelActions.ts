@@ -1,7 +1,5 @@
 import { IModelActions, IParameters } from 'spirit.io/lib/interfaces';
-import { ModelRegistry } from 'spirit.io/lib/core';
 import { IRedisModelFactory } from './modelFactory';
-import { helper as objectHelper } from 'spirit.io/lib/utils'
 import { wait } from 'f-promise';
 
 const uuid = require('uuid');
@@ -48,7 +46,6 @@ export class ModelActions implements IModelActions {
         } else {
             res = JSON.parse(res);
             if (options.ref) {
-                let refRes: any;
                 let refModelFactory = this.modelFactory.getModelFactoryByPath(options.ref);
                 let field = this.modelFactory.$fields.get(options.ref);
                 if (field.isPlural) {
@@ -74,7 +71,7 @@ export class ModelActions implements IModelActions {
         let key = `${this.modelFactory.collectionName}:${_id}`;
         item._updatedAt = new Date();
         let itemToStore = this.modelFactory.simplifyReferences(item);
-        let res = wait((<any>this.modelFactory.client).msetAsync(key, JSON.stringify(itemToStore)));
+        wait((<any>this.modelFactory.client).msetAsync(key, JSON.stringify(itemToStore)));
         if (options.includes) this._populate(itemToStore, options);
         return item;
     }

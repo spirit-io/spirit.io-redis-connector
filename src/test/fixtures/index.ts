@@ -1,18 +1,12 @@
 import { Server } from 'spirit.io/lib/application';
 import { RedisConnector } from '../../lib/connector';
-import { ConnectorHelper } from 'spirit.io/lib/core';
-import { devices } from 'f-streams';
 import { context, run } from 'f-promise';
 import { setup } from 'f-mocha';
 import { Fixtures as GlobalFixtures } from 'spirit.io/test/fixtures';
-
-const path = require('path');
-
-let trace;// = console.log;
+import * as path from 'path';
 
 const port = 3001;
 const redisPort = process.env.SPIRIT_REDIS_PORT || 6379;
-const baseUrl = 'http://localhost:' + port;
 
 const config = {
     modelsLocation: path.resolve(path.join(__dirname, '../models')),

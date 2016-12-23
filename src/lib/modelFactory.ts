@@ -1,21 +1,18 @@
 import { ModelFactoryBase } from 'spirit.io/lib/base'
-import { IConnector, IModelFactory, IModelActions, IModelHelper, IModelController } from 'spirit.io/lib/interfaces'
+import { IConnector, IModelFactory } from 'spirit.io/lib/interfaces'
 import { ModelActions } from './modelActions';
 import { ModelHelper } from './modelHelper';
 import { ModelController } from './modelController';
 import { RedisClient } from 'redis';
 import { Router } from 'express';
 
-let trace;// = console.log;
-
 export interface IRedisModelFactory extends IModelFactory {
     client: RedisClient;
 }
 
 export class ModelFactory extends ModelFactoryBase implements IRedisModelFactory {
-
-
     public client: RedisClient;
+
     constructor(name: string, targetClass: any, connector: IConnector) {
         super(name, targetClass, connector);
     }

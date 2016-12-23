@@ -1,4 +1,4 @@
-import { model, unique, required, index, reverse, embedded, hook } from 'spirit.io/lib/decorators';
+import { model, unique, required, index, reverse, embedded } from 'spirit.io/lib/decorators';
 import { ModelBase } from 'spirit.io/lib/base';
 
 @model({ datasource: 'redis' })

@@ -1,4 +1,4 @@
-import { IModelController, IModelFactory } from 'spirit.io/lib/interfaces';
+import { IModelController } from 'spirit.io/lib/interfaces';
 import { ModelControllerBase } from 'spirit.io/lib/base';
 import { IRedisModelFactory } from './modelFactory';
 
