@@ -1,6 +1,6 @@
 import { IConnector, IModelFactory } from 'spirit.io/lib/interfaces'
-import { ConnectionHelper } from './connectionHelper';
 import { ModelFactory } from './modelFactory';
+import { RedisClient } from 'redis';
 
 const redis = require("redis");
 const bluebird = require("bluebird");
@@ -23,6 +23,7 @@ bluebird.promisifyAll(redis.Multi.prototype);
 export class RedisConnector implements IConnector {
     private _datasource: string = 'redis';
     private _config: any;
+    public connections = new Map<string, RedisClient>();
 
     constructor(config: any) {
         this._config = config;
@@ -43,10 +44,25 @@ export class RedisConnector implements IConnector {
     }
 
     connect(datasourceKey: string, parameters: any): any {
-        ConnectionHelper.connect(datasourceKey, parameters);
+        let opts = parameters.options;
+        let client: RedisClient = <RedisClient>redis.createClient(parameters.uri, opts);
+        client.once("connect", () => {
+            console.log("Connected on redis: ", parameters.uri);
+        });
+        client.once("error", (e) => {
+            console.log("RedisError: ", e.stack);
+        });
+        this.connections.set(datasourceKey, client);
+        return client;
+    }
+
+    getConnection(datasourceKey: string): RedisClient {
+        let c = this.connections.get(datasourceKey);
+        if (!c) throw new Error(`Datasource '${datasourceKey}' not registered for redis connector. At least one datasource must be defined in your configuration file.`);
+        return c;
     }
 
     createModelFactory(name: string, myClass: any): IModelFactory {
-        return new ModelFactory(name, myClass);
+        return new ModelFactory(name, myClass, this);
     }
 }

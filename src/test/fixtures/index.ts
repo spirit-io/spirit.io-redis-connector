@@ -50,8 +50,6 @@ export class Fixtures extends GlobalFixtures {
             server.start(port);
         } else {
             firstSetup = false;
-            connector = <RedisConnector>ConnectorHelper.getConnector('redis');
-
         }
         //
 
