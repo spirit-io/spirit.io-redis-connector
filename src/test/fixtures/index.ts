@@ -1,4 +1,5 @@
 import { Server } from 'spirit.io/lib/application';
+import { ConnectorHelper } from 'spirit.io/lib/core';
 import { RedisConnector } from '../../lib/connector';
 import { context, run } from 'f-promise';
 import { setup } from 'f-mocha';
@@ -33,15 +34,7 @@ export class Fixtures extends GlobalFixtures {
         let connector;
         if (!context().__server) {
             let server: Server = context().__server = new Server(config);
-            run(() => {
-                console.log("\n========== Initialize server begins ============");
-                connector = new RedisConnector(config.connectors.redis);
-                server.addConnector(connector);
-                console.log("Connector config: " + JSON.stringify(connector.config, null, 2));
-                server.init();
-            }).catch(err => {
-                done(err);
-            });
+
             server.on('initialized', function () {
                 run(() => {
                     console.log("========== Server initialized ============\n");
@@ -50,6 +43,7 @@ export class Fixtures extends GlobalFixtures {
                     done(err);
                 });
             });
+
             server.on('started', function () {
                 run(() => {
                     console.log("========== Server started ============\n");
@@ -61,11 +55,24 @@ export class Fixtures extends GlobalFixtures {
                 });
             });
 
+            run(() => {
+                console.log("\n========== Initialize server begins ============");
+                connector = new RedisConnector(config.connectors.redis);
+                server.addConnector(connector);
+                console.log("Connector config: " + JSON.stringify(connector.config, null, 2));
+                server.init();
+            }).catch(err => {
+                done(err);
+            });
+
+
         } else {
             firstSetup = false;
         }
         //
-
+        // delete the whole database
+        let mConnector: RedisConnector = <RedisConnector>ConnectorHelper.getConnector('redis');
+        Fixtures.cleanDatabases([mConnector]);
         //
         if (!firstSetup) done();
         return context().__server;
