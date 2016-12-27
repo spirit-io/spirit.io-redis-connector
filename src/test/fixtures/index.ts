@@ -2,7 +2,6 @@ import { Server } from 'spirit.io/lib/application';
 import { ConnectorHelper } from 'spirit.io/lib/core';
 import { RedisConnector } from '../../lib/connector';
 import { context, run } from 'f-promise';
-import { setup } from 'f-mocha';
 import { Fixtures as GlobalFixtures } from 'spirit.io/test/fixtures';
 import * as path from 'path';
 
@@ -16,7 +15,8 @@ const config = {
             datasources: {
                 "redis": {
                     uri: "redis://localhost:" + redisPort + "/0",
-                    options: {}
+                    options: {},
+                    autoConnect: true
                 }
             },
             client: {
@@ -30,7 +30,12 @@ const config = {
 export class Fixtures extends GlobalFixtures {
 
     static setup = (done) => {
-        let firstSetup = true;
+        function reset() {
+            // delete the whole database
+            let rConnector: RedisConnector = <RedisConnector>ConnectorHelper.getConnector('redis');
+            Fixtures.cleanDatabases([rConnector]);
+
+        }
         let connector;
         if (!context().__server) {
             let server: Server = context().__server = new Server(config);
@@ -47,8 +52,6 @@ export class Fixtures extends GlobalFixtures {
             server.on('started', function () {
                 run(() => {
                     console.log("========== Server started ============\n");
-                    // this call activates f-mocha wrapper.
-                    setup();
                     done();
                 }).catch(err => {
                     done(err);
@@ -60,6 +63,8 @@ export class Fixtures extends GlobalFixtures {
                 connector = new RedisConnector(config.connectors.redis);
                 server.addConnector(connector);
                 console.log("Connector config: " + JSON.stringify(connector.config, null, 2));
+                // delete the whole database
+                reset();
                 server.init();
             }).catch(err => {
                 done(err);
@@ -67,14 +72,15 @@ export class Fixtures extends GlobalFixtures {
 
 
         } else {
-            firstSetup = false;
+            run(() => {
+                reset();
+                done();
+            }).catch(err => {
+                done(err);
+            });
+
         }
         //
-        // delete the whole database
-        let mConnector: RedisConnector = <RedisConnector>ConnectorHelper.getConnector('redis');
-        Fixtures.cleanDatabases([mConnector]);
-        //
-        if (!firstSetup) done();
         return context().__server;
     }
 }

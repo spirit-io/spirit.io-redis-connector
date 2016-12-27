@@ -43,7 +43,8 @@ export class RedisConnector implements IConnector {
         return this._config;
     }
 
-    connect(datasourceKey: string, parameters: any): any {
+    connect(datasourceKey: string): any {
+        let parameters = this.config.datasources[datasourceKey];
         let opts = parameters.options;
         let client: RedisClient = <RedisClient>redis.createClient(parameters.uri, opts);
         client.once("connect", () => {
@@ -58,7 +59,7 @@ export class RedisConnector implements IConnector {
 
     getConnection(datasourceKey: string): RedisClient {
         let c = this.connections.get(datasourceKey);
-        if (!c) throw new Error(`Datasource '${datasourceKey}' not registered for redis connector. At least one datasource must be defined in your configuration file.`);
+        if (!c) throw new Error(`Connection for '${datasourceKey}' datasource not registered for redis connector. At least one datasource must be defined in your configuration file. Please check 'connect' function has been called or 'autoConnect' flag is set to 'true' in the datasource configuration`);
         return c;
     }
 
