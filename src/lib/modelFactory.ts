@@ -4,7 +4,6 @@ import { ModelActions } from './modelActions';
 import { ModelHelper } from './modelHelper';
 import { ModelController } from './modelController';
 import { RedisClient } from 'redis';
-import { Router } from 'express';
 
 export interface IRedisModelFactory extends IModelFactory {
     client: RedisClient;
@@ -17,8 +16,8 @@ export class ModelFactory extends ModelFactoryBase implements IRedisModelFactory
         super(name, targetClass, connector);
     }
 
-    setup(routers: Map<string, Router>) {
-        super.init(routers, new ModelActions(this), new ModelHelper(this), new ModelController(this));
+    setup() {
+        super.init(new ModelActions(this), new ModelHelper(this), new ModelController(this));
 
         if (Object.keys(this.$prototype).length) {
             this.client = this.connector.getConnection(this.datasource || 'redis');
