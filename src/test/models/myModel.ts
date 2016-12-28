@@ -1,4 +1,4 @@
-import { model, unique, required, index, reverse, embedded } from 'spirit.io/lib/decorators';
+import { model, required, reverse, embedded } from 'spirit.io/lib/decorators';
 import { ModelBase } from 'spirit.io/lib/base';
 
 @model({ datasource: 'redis' })
@@ -20,10 +20,8 @@ export class MyModel extends ModelBase {
     @required // twice for coverage
     pString: string;
 
-    @unique
     pNumber: number;
 
-    @index
     pDate: Date;
 
     pBoolean: boolean;

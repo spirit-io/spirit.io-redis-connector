@@ -3,6 +3,7 @@
   "version": "1.0.7",
   "description": "Typescript redis connector for spirit.io framework",
   "main": "index.js",
+  "typings": "index.d.ts",
   "scripts": {
     "prepublish": "rm -rf lib && rm -Rf test && tsc -p src",
     "test": "tsc -p src && node ./node_modules/nyc/bin/nyc ./node_modules/mocha/bin/_mocha --opts mocha.opts",

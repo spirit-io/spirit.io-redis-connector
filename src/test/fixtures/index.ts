@@ -43,6 +43,8 @@ export class Fixtures extends GlobalFixtures {
             server.on('initialized', function () {
                 run(() => {
                     console.log("========== Server initialized ============\n");
+                    // delete the whole database
+                    reset();
                     server.start(port);
                 }).catch(err => {
                     done(err);
@@ -63,8 +65,6 @@ export class Fixtures extends GlobalFixtures {
                 connector = new RedisConnector(config.connectors.redis);
                 server.addConnector(connector);
                 console.log("Connector config: " + JSON.stringify(connector.config, null, 2));
-                // delete the whole database
-                reset();
                 server.init();
             }).catch(err => {
                 done(err);
