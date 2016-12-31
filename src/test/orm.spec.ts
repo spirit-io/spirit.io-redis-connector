@@ -32,7 +32,7 @@ function removaAllDocuments() {
     expect(rels.length).to.equal(0);
 }
 
-describe('Spirit.io ORM Framework Tests:', () => {
+describe('*** Spirit.io ORM Framework Tests ***', () => {
 
     before(function (done) {
         this.timeout(10000);

@@ -10,7 +10,7 @@ setup();
 
 let server: Server;
 
-describe('Spirit.io REST Express routes Tests:', () => {
+describe('*** Spirit.io REST Express routes Tests ***', () => {
     before(function (done) {
         this.timeout(10000);
         server = Fixtures.setup(done);
@@ -235,7 +235,7 @@ describe('Spirit.io REST Express routes Tests:', () => {
     });
 
     it('update complex instance with only one property should work and return only provided values', () => {
-        let resp = Fixtures.put('/api/v1/myModel/' + myModel[0], { pString: "s0updatedAgain", pNumber: 0 });
+        let resp = Fixtures.put('/api/v1/myModel/' + myModel[0], { pString: "s0updatedAgain", pNumber: 0, aString: [] });
         expect(resp.status).to.equal(200);
         let body = JSON.parse(resp.body);
 

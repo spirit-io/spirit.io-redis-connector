@@ -1,4 +1,4 @@
-import { IConnector, IModelFactory } from 'spirit.io/lib/interfaces'
+import { IConnector, IModelFactory, IValidator } from 'spirit.io/lib/interfaces'
 import { ModelFactory } from './modelFactory';
 import { RedisClient } from 'redis';
 
@@ -23,6 +23,7 @@ bluebird.promisifyAll(redis.Multi.prototype);
 export class RedisConnector implements IConnector {
     private _datasource: string = 'redis';
     private _config: any;
+    public validators: Map<string, IValidator> = new Map();
     public connections = new Map<string, RedisClient>();
 
     constructor(config: any) {
@@ -69,5 +70,13 @@ export class RedisConnector implements IConnector {
 
     createModelFactory(name: string, myClass: any): IModelFactory {
         return new ModelFactory(name, myClass, this);
+    }
+
+    registerValidator(validator: IValidator) {
+        this.validators.set(validator.name, validator);
+    }
+
+    getValidator(key: string): IValidator {
+        return this.validators.get(key);
     }
 }
