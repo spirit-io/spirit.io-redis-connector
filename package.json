@@ -1,6 +1,6 @@
 {
   "name": "spirit.io-redis-connector",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Typescript redis connector for spirit.io framework",
   "main": "index.js",
   "typings": "index.d.ts",
