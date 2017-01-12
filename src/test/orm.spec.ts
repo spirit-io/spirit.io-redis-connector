@@ -78,9 +78,9 @@ describe('*** Spirit.io ORM Framework Tests ***', () => {
         let m1: MyModel = new MyModel();
         db.updateValues(m1, null); // update with null data for test coverage
         db.saveInstance(m1, data);
-        expect(m1.id).to.be.a("string");
-        expect(m1.createdAt).to.be.a("Date");
-        expect(m1.updatedAt).to.be.a("Date");
+        expect(m1._id).to.be.a("string");
+        expect(m1._createdAt).to.be.a("Date");
+        expect(m1._updatedAt).to.be.a("Date");
         expect(m1.serialize()).to.be.a("object");
         expect(m1.pString).to.equal("pString");
         expect(m1.pNumber).to.equal(20);
