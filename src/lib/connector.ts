@@ -68,8 +68,8 @@ export class RedisConnector implements IConnector {
         this.getConnection(ds).flushdb();
     }
 
-    createModelFactory(name: string, myClass: any): IModelFactory {
-        return new ModelFactory(name, myClass, this);
+    createModelFactory(name: string, myClass: any, options?: any): IModelFactory {
+        return new ModelFactory(name, myClass, this, options);
     }
 
     registerValidator(validator: IValidator) {

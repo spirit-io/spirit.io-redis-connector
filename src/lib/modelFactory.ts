@@ -12,8 +12,8 @@ export interface IRedisModelFactory extends IModelFactory {
 export class ModelFactory extends ModelFactoryBase implements IRedisModelFactory {
     public client: RedisClient;
 
-    constructor(name: string, targetClass: any, connector: IConnector) {
-        super(name, targetClass, connector);
+    constructor(name: string, targetClass: any, connector: IConnector, options?: any) {
+        super(name, targetClass, connector, options);
     }
 
     setup() {
